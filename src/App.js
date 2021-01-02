@@ -5,6 +5,7 @@ import queryString from 'query-string';
 
 import PostList from './components/PostList';
 import Pagination from './components/Pagination';
+import SearchForm from './components/SearchForm';
 
 function App() {
   const [postList, setPostList] = useState([]) ; 
@@ -16,7 +17,7 @@ function App() {
   const [filters, setFilters] = useState( {    
     _limit: 10,
     _page: 1,
-   }) ;
+  }) ;
 
 
 
@@ -38,22 +39,35 @@ function App() {
     fetchData() ;
   }, [filters] ) ;
 
-  const handlePaginationChange = ( page) => {
+  const handlePaginationChange = ( newPage) => {
     const newFilters = {
       ...filters,
-      _page: page
+      _page: newPage,
+      
     }  
 
     setFilters(newFilters);
   }
 
+
+  const handleSearchFormChange = (newSearchTerm) => {
+    
+    const newFilters = {
+      ...filters,
+      _page: 1,
+      title_like: newSearchTerm.searchTerm
+    }
+    setFilters(newFilters);
+  }
+
   return (
     <div className="App"> 
-  <h1>Post List</h1>
-     <PostList posts={postList} />
-     <Pagination 
-        pagination={pagination} 
-        onPaginationChange={handlePaginationChange}
+      <h1>Post List</h1>
+      <SearchForm onSubmit={handleSearchFormChange} /> 
+      <PostList posts={postList} />
+      <Pagination 
+          pagination={pagination} 
+          onPaginationChange={handlePaginationChange}
       />
     </div>
   );
